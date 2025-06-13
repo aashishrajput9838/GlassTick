@@ -149,8 +149,12 @@ class SettingsWindow(tk.Toplevel):
                                  activeforeground='white')
         format_24.pack(side='left', padx=5)
         
+        # Button frame for Save and Close buttons
+        button_frame = tk.Frame(main_frame, bg='#2b2b2b')
+        button_frame.pack(pady=20)
+        
         # Save button
-        save_button = tk.Button(main_frame,
+        save_button = tk.Button(button_frame,
                               text="Save Settings",
                               command=self.save_settings,
                               bg='#0078d7',
@@ -159,7 +163,19 @@ class SettingsWindow(tk.Toplevel):
                               relief='flat',
                               padx=20,
                               pady=10)
-        save_button.pack(pady=20)
+        save_button.pack(side='left', padx=10)
+        
+        # Close button
+        close_button = tk.Button(button_frame,
+                               text="Close Widget",
+                               command=self.close_widget,
+                               bg='#d70000',  # Red color for close button
+                               fg='white',
+                               font=('Segoe UI', 10, 'bold'),
+                               relief='flat',
+                               padx=20,
+                               pady=10)
+        close_button.pack(side='left', padx=10)
         
         # Center the window
         self.update_idletasks()
@@ -190,7 +206,7 @@ class SettingsWindow(tk.Toplevel):
         with open('clock_settings.json', 'w') as f:
             json.dump(self.settings, f)
         self.parent.apply_settings(self.settings)
-        self.destroy()
+        self.close_widget()
     
     def update_transparency(self, value):
         self.settings['transparency'] = float(value)
@@ -215,6 +231,11 @@ class SettingsWindow(tk.Toplevel):
     
     def update_time_format(self):
         self.settings['time_format'] = self.format_var.get()
+    
+    def close_widget(self):
+        """Close both the settings window and the main clock widget"""
+        self.parent.quit()  # This will close the main application
+        self.destroy()  # Close the settings window
 
 class FloatingClock(tk.Tk):
     def __init__(self):
